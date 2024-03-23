@@ -1,0 +1,41 @@
+{% load static %}
+{% include 'Customer/header.html'%}
+<!-- About Start -->
+
+<div class="container-fluid py-5" id="about">
+    <div class="container py-5">
+        <div class="section-title position-relative text-center">
+            <h6 class="text-uppercase text-primary mb-3" style="letter-spacing: 3px;">About</h6>
+            <h1 class="font-secondary display-4"> More Details</h1>
+            <i class="far fa-heart text-dark"></i>
+        </div>
+
+        <div class="row m-0">
+            <div class="col-md-6 p-0" style="min-height: 400px;">
+                <img class="position-absolute w-100 h-100" src="/images/{{services.image}}"  style="width:300px; height:300px;"
+                     style="object-fit: cover;">
+            </div>
+            <div class="col-md-6 p-0 text-center text-md-left">
+                <div class="h-100 d-flex flex-column justify-content-center bg-secondary p-5">
+                    <h3 class="mb-3">{{services.providerid.servicename}}</h3>
+
+                    <p>{{services.desc}}</p>
+                    <p><i class="fa fa-map-marker text-primary pr-3"></i>{{services.locationid.locationname}}</p>
+                    <h3 class="font-secondary font-weight-normal text-muted mb-3">
+                       <i class="fa fa-inr text-primary pr-3"></i>{{services.rate}}/-</h3>
+                    <form action="{% url 'booking' services.serviceid %} " method="post">
+                        {% csrf_token %}
+                    <input type="date" name="eventdate"><br>
+                    <div class="position-relative">
+    <button type="submit" class="btn btn-outline-primary btn-block mr-1" >Book Now</button></div>
+                        </form>
+
+
+                </div>
+            </div>
+        </div><br><br>
+
+    </div>
+</div>
+<!-- About End -->
+{% include 'Customer/footer.html'%}

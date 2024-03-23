@@ -1,0 +1,37 @@
+    <!-- Gallery Start -->
+    {% load static %}
+{% include 'Customer/header.html'%}
+
+
+    <!-- Friends & Family Start -->
+    <div class="container-fluid py-5" id="family">
+        <div class="container pt-5 pb-3">
+            <div class="section-title position-relative text-center">
+                <h6 class="text-uppercase text-primary mb-3" style="letter-spacing: 3px;"> for Friends & Family</h6>
+                <h1 class="font-secondary display-4">Category Views</h1>
+                <i class="far fa-heart text-dark"></i>
+            </div>
+            <div class="row portfolio-container">
+                {% for c in category %}
+                <div class="col-lg-4 col-md-6 mb-4 portfolio-item first">
+                    <div class="position-relative mb-2">
+                        <a href="{% url 'subcatview' id=c.categoryid %}">
+                        <img class="img-fluid w-100"  src="/images/{{c.image}}" style="width:300px; height:300px;" alt=""></a>
+                        <div class="bg-secondary text-center p-4">
+                            <h4 class="mb-3">{{c.categoryname}}</h4>
+                            <p class="text-uppercase">{{c.desc}}</p>
+                            <div class="d-inline-block">
+                                <a class="mx-2" href="#"><i class="fab fa-twitter"></i></a>
+                                <a class="mx-2" href="#"><i class="fab fa-facebook-f"></i></a>
+                                <a class="mx-2" href="#"><i class="fab fa-linkedin-in"></i></a>
+                                <a class="mx-2" href="#"><i class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <!-- Friends & Family End -->
+    {% include 'Customer/footer.html'%}

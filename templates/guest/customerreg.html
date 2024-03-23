@@ -1,0 +1,139 @@
+{% load static %}
+{% include "guest/guestheader.html" %}
+<script src="{% static 'Admin/jquery.min.js' %}"></script>
+<script>
+    $(document).ready(function () {
+
+    $.ajaxSetup({
+        headers: {
+            "X-CSRFToken": '{{ csrf_token }}'
+        }
+    });
+
+    $('#statename').change(function () {
+        var did = $(this).val();
+        $.ajax({
+            type: "POST",
+            url: '{% url "filldistrict" %}',
+            data: { did: did },
+            dataType: "json",
+            success: function (data) {
+                $('#district').empty();
+                var opt = $('<option />').val(0).text('--Select--');
+                $('#district').append(opt);
+                $.each(data, function(key, val) {
+                    var opt = $('<option />').val(val.districtid).text(val.districtname);
+                    $('#district').append(opt);
+                });
+            }
+        });
+    });
+
+    $('#district').change(function () {
+        var did = $(this).val();
+        $.ajax({
+            type: "POST",
+            url: '{% url "filllocation" %}',
+            data: { did: did },
+            dataType: "json",
+            success: function (data) {
+            $('#location').empty();
+                var opt = $('<option />').val(0).text('--Select--');
+                $('#location').append(opt);
+                $.each(data, function(key, val) {
+                    var opt = $('<option />').val(val.locationid).text(val.locationname);
+                    $('#location').append(opt);
+                });
+            }
+        });
+    });
+});
+</script>
+
+<div class="contact">
+    <div class="container-fluid">
+        <div class="row ">
+            <div class="col-md-12">
+                <div class="titlepage text_align_center">
+                    <h2>Customer Registration</h2>
+                </div>
+            </div>
+            <div class="col-md-3">
+            </div>
+            <div class="col-md-6">
+                <form id="request" class="main_form" method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6 ">
+                            <label>First Name</label>
+                            <input class="contactus" placeholder="" type="type" name="fname" required>
+                        </div>
+                        <div class="col-md-6 ">
+                            <label>Middle Name</label>
+                            <input class="contactus" placeholder="" type="type" name="mname">
+                        </div>
+                        <div class="col-md-6 ">
+                            <label>Last Name</label>
+                            <input class="contactus" placeholder="" type="type" name="lname" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Phone Number</label>
+                            <input class="contactus" placeholder="" type="type" name="phone" required>
+                        </div>
+                        <div class="col-md-12 ">
+                            <label>Address</label>
+                            <input class="contactus" placeholder="" type="type" name="addr" required>
+                        </div>
+                        <div class="col-md-12">
+                            <label>Email</label>
+                            <input class="contactus" placeholder="" type="email" name="email" required>
+                        </div>
+                        <div class="col-md-12">
+                            <label>Username</label>
+                            <input class="contactus" placeholder="" type="type" name="username" required>
+                        </div>
+                        <div class="col-md-12">
+                            <label>Password</label>
+                            <input class="contactus" placeholder="" type="password" name="password" required>
+                        </div>
+
+                        <br>
+                        <div class="col-md-12">
+                            <label>State</label>
+                            <br>
+                            <select name="statename" id="statename" style="height: 50px;" class="col-md-12" required>
+                                <option value=""> choose state..</option>
+
+                                {% for s in s %}
+                                <option value="{{s.stateid}}">{{ s.statename }}</option><br><br>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <br><br>
+                        <div class="col-md-12">
+                            <label>District</label>
+                            <br>
+                            <select class="col-md-12" id="district" style="height: 50px;" required>
+                                <option value=""> choose district..</option>
+                            </select>
+                        </div>
+                        <br>
+                        <div class="col-md-12">
+                            <label>Location</label>
+                            <br>
+                            <select class="col-md-12" name="location" id="location" style="height: 50px;" required>
+                                <option value=""> choose location..</option>
+                            </select>
+                        </div>
+                        <div class="col-md-12">
+                            <input type="submit" value="Register" class="send_btn">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-3">
+        </div>
+    </div>
+</div>
+{% include "guest/guestfooter.html" %}

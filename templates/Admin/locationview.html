@@ -1,0 +1,157 @@
+{% load static %}
+{% include 'Admin/adminheader.html'%}
+
+<script src="{% static 'Admin/jquery.min.js' %}"></script>
+<script>
+    $(document).ready(function () {
+
+    $.ajaxSetup({
+        headers: {
+            "X-CSRFToken": '{{ csrf_token }}'
+        }
+    });
+
+    $('#statename').change(function () {
+        var did = $(this).val();
+        $.ajax({
+            type: "POST",
+            url: '{% url "filldistrict" %}',
+            data: { did: did },
+            dataType: "json",
+            success: function (data) {
+                $('#district').empty();
+                var opt = $('<option />').val(0).text('--Select--');
+                $('#district').append(opt);
+                $.each(data, function(key, val) {
+                    var opt = $('<option />').val(val.districtid).text(val.districtname);
+                    $('#district').append(opt);
+                });
+            }
+        });
+    });
+
+    $('#district').change(function () {
+        var did = $(this).val();
+        $.ajax({
+            type: "POST",
+            url: '{% url "filllocation" %}',
+            data: { did: did },
+            dataType: "json",
+            success: function (data) {
+            i=1;
+                $('#location tbody').empty();
+                $.each(data, function(key, val) {
+                    var tr = $('<tr>');
+                    var td1 = $('<td>').text(i++);
+                    var td2 = $('<td>').text(val.locationname);
+                    var editUrl = '../locationedit/' + val.locationid;
+                    var deleteUrl = '../locationdelete/' + val.locationid;
+                    var td3 = $('<td>').html('<a href="' + editUrl + '">Edit</a>');
+                    var td4 = $('<td>').html('<a href="' + deleteUrl + '">Delete</a>');
+                    tr.append(td1, td2, td3, td4);
+                    $('#location').append(tr);
+                });
+            }
+        });
+    });
+});
+</script>
+
+<style>
+    .selectpicker{
+        display: inline-block;
+    overflow: hidden;
+    width: 100%;
+    text-align: left;
+    height:40px;
+    border-radius:20px;
+    border: 2px solid #00c292;
+    color:#00c292;
+
+    }
+
+</style>
+<div class="form-element-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="form-element-list mg-t-30">
+                    <div class="cmp-tb-hd">
+                        <h2>Location Details</h2>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                            <div class="nk-int-mk sl-dp-mn">
+                                <h2>Choose State</h2>
+                            </div>
+                            <div class="bootstrap-select fm-cmp-mg">
+                                <select class="selectpicker" id="statename" name="statename">
+                                    <option>Choose State</option>
+                                    {% for s in state %}
+                                    <option value="{{s.stateid}}">{{ s.statename }}</option>
+                                    {% endfor %}
+                                </select>
+
+
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                            <div class="nk-int-mk sl-dp-mn">
+                                <h2>Choose district</h2>
+                            </div>
+                            <div class="bootstrap-select fm-cmp-mg">
+                                <select class="selectpicker" id="district">
+                                    <option>Choose District</option>
+                                </select>
+                            </div>
+                        </div>
+                        <br>
+                        <br>
+
+                        <div class="data-table-area">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <div class="data-table-list">
+                                            <div class="basic-tb-hd">
+                                                <h2>LOCATIONS</h2>
+                                            </div>
+                                            <div class="table-responsive">
+                                                <table id="location" class="table table-striped">
+                                                    <thead>
+
+                                                    <tr>
+                                                        <th>Sl.no</th>
+                                                        <th>Location</th>
+                                                        <th>Edit</th>
+                                                        <th>Delete</th>
+
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {% for l in loc %}
+                                                    <tr>
+                                                        <th>{{forloop.counter}}</th>
+                                                        <th>{{l.locationname}}</th>
+                                                        <th><a href="{% url 'locationedit' id=l.locationid %}">Edit</a></th>
+                                                        <th><a href="{% url 'locationdelete' id=l.locationid %}">Delete</a></th>
+
+
+                                                    </tr>
+                                                    {% endfor %}
+                                                    </tbody>
+
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include 'Admin/adminfooter.html'%}

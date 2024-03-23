@@ -1,0 +1,231 @@
+{% load static %}
+
+{% include 'Service/header.html'%}
+<script src="{% static 'Admin/jquery.min.js' %}" xmlns="http://www.w3.org/1999/html"></script>
+<script>
+    $(document).ready(function () {
+
+    $.ajaxSetup({
+        headers: {
+            "X-CSRFToken": '{{ csrf_token }}'
+        }
+    });
+
+    $('#statename').change(function () {
+        var did = $(this).val();
+        $.ajax({
+            type: "POST",
+            url: '{% url "filldistrict" %}',
+            data: { did: did },
+            dataType: "json",
+            success: function (data) {
+                $('#district').empty();
+                var opt = $('<option />').val(0).text('--Select--');
+                $('#district').append(opt);
+                $.each(data, function(key, val) {
+                    var opt = $('<option />').val(val.districtid).text(val.districtname);
+                    $('#district').append(opt);
+                });
+            }
+        });
+    });
+
+    $('#district').change(function () {
+        var did = $(this).val();
+        $.ajax({
+            type: "POST",
+            url: '{% url "filllocation" %}',
+            data: { did: did },
+            dataType: "json",
+            success: function (data) {
+            $('#location').empty();
+                var opt = $('<option />').val(0).text('--Select--');
+                $('#location').append(opt);
+                $.each(data, function(key, val) {
+                    var opt = $('<option />').val(val.locationid).text(val.locationname);
+                    $('#location').append(opt);
+                });
+            }
+        });
+    });
+});
+</script>
+<script>
+    $(document).ready(function () {
+    //alert("a")
+    $.ajaxSetup({
+        headers: {
+            "X-CSRFToken": '{{ csrf_token }}'
+        }
+    });
+
+    $('#categoryname').change(function () {
+        var did = $(this).val();
+        $.ajax({
+
+            type: "POST",
+            url: '{% url "fillcategory" %}',
+            data: { did: did },
+            dataType: "json",
+            success: function (data) {
+
+                $('#subcategory').empty();
+                var opt = $('<option />'); // here we're creating a new select option with for each city
+                 opt.val(0);
+                 opt.text('--Select--');
+                  $('#subcategory').append(opt);
+
+               $.each(data, function(key, val)
+                {
+                                var opt = $('<option />'); // here we're creating a new select option with for each city
+                                opt.val(val.subcatid);
+                                opt.text(val.subcatname);
+                                $('#subcategory').append(opt); //here we will append these new select options to a dropdown with the id 'cities'
+                });
+            }
+        });
+    });
+});
+</script>
+
+
+
+.actions a {
+background: #009688;
+color: #fff;
+display: block;
+padding: 0.5em 1em;
+text-decoration: none;
+-webkit-border-radius: 0;
+-moz-border-radius: 0;
+-ms-border-radius: 0;
+border-radius: 0;
+}
+
+<div style="margin-left:40px; margin-right:40px;">
+    <div class="theme-red">
+        <form action="{% url 'serviceregistration' %}" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row clearfix">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="card">
+                            <div class="header">
+                                <h2>SERVICES REGISTRATION</h2>
+
+                            </div>
+                            <div class="row">
+                                <!--                                    <div class="row clearfix">-->
+                                <div class="col-sm-3">
+                                    <label>Choose Category</label>
+                                    <select class="form-control show-tick" name="categoryname" id="categoryname" required>
+                                        <option value="">-- Please select --</option>
+                                        {% for c in category %}
+                                        <option value="{{c.categoryid}}">{{c.categoryname}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-sm-5">
+                                    <label>Choose Subcategory</label>
+
+                                    <select class="form-control show-tick" name="subcategory" id="subcategory" required>
+                                        <option value="">-- Please select --</option>
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="body">
+
+                                    <h3>Service Details</h3>
+                                    <fieldset>
+                                        <div class="form-group form-float">
+                                            <div class="form-line">
+                                                <input type="text" class="form-control" name="servname" required>
+                                                <label class="form-label">Servicename*</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group form-float">
+                                            <div class="form-line"><br><br>
+                                                <input type="file" class="form-control" name="image" id="password" required>
+                                                <label class="form-label">Image</label>
+                                            </div>
+                                        </div>
+<div class="form-group form-float">
+                                            <div class="form-line">
+                                                <input type="number" class="form-control" name="rate" required>
+                                                <label class="form-label">Rate*</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group form-float">
+                                            <div class="form-line">
+                                            <textarea name="desc" cols="30" rows="3" class="form-control no-resize"
+                                                      required></textarea>
+                                                <label class="form-label">Description*</label>
+                                            </div>
+                                        </div>
+
+
+                                    </fieldset>
+
+                                    <h3>Location Information</h3><br>
+                                    <fieldset>
+                                        <div class="row">
+                                            <label>Choose State</label>
+
+                                            <select class="form-control show-tick" name="statename" id="statename">
+                                                <option>-- Please select --</option>
+                                                {% for s in st %}
+                                                <option value="{{s.stateid}}">{{s.statename}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <br>
+
+                                        <div class="form-line">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <label>Choose District</label>
+
+                                                    <select class="form-control show-tick" id="district">
+                                                        <option value="">-- Please select --</option>
+                                                        {% for d in district %}
+                                                        <option value="10">10</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <label>Choose Location</label>
+
+                                                    <select class="form-control show-tick" name="location"
+                                                            id="location">
+                                                        <option value="">-- Please select --</option>
+                                                        {% for l in location %}
+                                                        <option value="10">10</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+
+                                    </fieldset>
+                                    <div class="row" style=" padding-left:257px">
+                                        <button class="btn btn-danger"
+                                                style="width:150px;height:40px;border-radius:30px">Register
+                                        </button>
+                                    </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        </form>
+    </div>
+</div>
+
+{% include 'Service/footer.html'%}
+

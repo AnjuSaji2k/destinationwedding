@@ -1,0 +1,80 @@
+{% load static %}
+
+{% include 'Service/header.html'%}
+<br>
+<br>
+<br>
+<br>
+
+<div style="margin-left:300px; margin-right:30px;" >
+<div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            <h2>
+                                TRAVEL VIEWS
+                            </h2>
+                        </div>
+                        <br>
+                        <div class="col-sm-6">
+                                        <label>Choose Category</label>
+                                        <select class="form-control show-tick" name="categoryname" id="categoryname">
+                                            <option value="">-- Please select --</option>
+                                            {% for c in category %}
+                                            <option value="{{c.categoryid}}">{{c.categoryname}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label>Choose Subcategory</label>
+
+                                        <select class="form-control show-tick" name="subcategory" id="subcategory">
+                                            <option value="">-- Please select --</option>
+
+                                        </select>
+                                    </div>
+                        <br><br><br><br>
+                        <div class="body table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Sl.No.</th>
+                                        <th>SERVICE TYPE</th>
+                                        <th>PROVIDERS NAME</th>
+                                        <th>VEHICLE NAME</th>
+                                        <th>No. of SEATS</th>
+                                        <th>RATE</th>
+                                        <th>DESC</th>
+                                        <th>LOCATION</th>
+                                        <th>IMAGE</th>
+                                        <th>EDIT</th>
+                                        <th>DELETE</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for v in trvl %}
+                                    <tr>
+                                        <th scope="row">{{forloop.counter}}</th>
+                                        <td>{{v.categoryid.categoryname}}</td>
+                                        <td>{{v.providerid.servicename}}</td>
+                                        <td>{{v.vname}}</td>
+                                        <td>{{v.seat}}</td>
+                                        <td>{{v.rate}}</td>
+                                        <td>{{v.desc}}</td>
+                                        <td>{{v.locationid.locationname}}</td>
+                                        <td><img  src="/images/{{v.image}}" style="width:100px;height:110px" ></td>
+                                        <td><a href="{% url 'traveledit' id=v.vehicleid %}"><button class="btn btn-success">Edit</button></a></td>
+                                        <td><a href="{% url 'traveldelete' id=v.vehicleid %}"><button class="btn btn-danger">Delete</button></a></td>
+
+
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+{% include 'Service/footer.html'%}

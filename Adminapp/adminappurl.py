@@ -1,0 +1,36 @@
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('adminhome/', views.adminhome, name='adminhome'),
+    path('statereg/', views.statereg, name='statereg'),
+    path('subcategoryreg/', views.subcategoryreg, name='subcategoryreg'),
+    path('subcatview/', views.subcatview, name='subcatview'),
+    path('subcatdelete/<id>', views.subcatdelete, name='subcatdelete'),
+    path('subcatedit/<id>', views.subcatedit, name='subcatedit'),
+    path('fillcategory/', views.fillcategory, name='fillcategory'),
+    path('stateview/', views.stateview, name='stateview'),
+    path('statedelete/<id>', views.statedelete, name='statedelete'),
+    path('stateedit/<id>', views.stateedit, name='stateedit'),
+    path('districtreg/', views.districtreg, name='districtreg'),
+    path('districtview/', views.districtview, name='districtview'),
+    path('districtdelete/<id>', views.districtdelete, name='districtdelete'),
+    path('districtedit/<id>', views.districtedit, name='districtedit'),
+    path('locationreg/', views.locationreg, name='locationreg'),
+    path('filldistrict', views.filldistrict, name='filldistrict'),
+    path('locationview/', views.locationview, name='locationview'),
+    path('filllocation', views.filllocation, name='filllocation'),
+    path('locationedit/<id>', views.locationedit, name='locationedit'),
+    path('locationdelete/<id>', views.locationdelete, name='locationdelete'),
+    path('categoryreg/', views.categoryreg, name='categoryreg'),
+    path('categoryview/', views.categoryview, name='categoryview'),
+    path('categorydelete/<id>', views.categorydelete, name='categorydelete'),
+    path('categoryedit/<id>', views.categoryedit, name='categoryedit'),
+    path('servicerequestview/', views.servicerrequest, name='servicerequestview'),
+    path('serviceraccept/<id>', views.serviceraccept, name='serviceraccept'),
+    path('servicerreject/<id>', views.servicerreject, name='servicerreject'),
+    path('serviceacceptview/', views.serviceacceptview, name='serviceacceptview'),
+    path('servicerejectview/', views.servicerejectview, name='servicerejectview'),
+    path('logout', views.logout, name='logout'),
+
+]

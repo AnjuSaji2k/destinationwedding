@@ -1,0 +1,186 @@
+{% load static %}
+
+{% include 'Service/header.html'%}
+<script src="{% static 'Admin/jquery.min.js' %}" xmlns="http://www.w3.org/1999/html"></script>
+<script>
+    $(document).ready(function () {
+
+    $.ajaxSetup({
+        headers: {
+            "X-CSRFToken": '{{ csrf_token }}'
+        }
+    });
+
+    $('#statename').change(function () {
+        var did = $(this).val();
+        $.ajax({
+            type: "POST",
+            url: '{% url "filldistrict" %}',
+            data: { did: did },
+            dataType: "json",
+            success: function (data) {
+                $('#district').empty();
+                 $('#location').empty();
+                var opt = $('<option />').val(0).text('--Select--');
+                $('#district').append(opt);
+                $.each(data, function(key, val) {
+                    var opt = $('<option />').val(val.districtid).text(val.districtname);
+                    $('#district').append(opt);
+                });
+            }
+        });
+    });
+
+    $('#district').change(function () {
+        var did = $(this).val();
+        $.ajax({
+            type: "POST",
+            url: '{% url "filllocation" %}',
+            data: { did: did },
+            dataType: "json",
+            success: function (data) {
+            $('#location').empty();
+                var opt = $('<option />').val('').text('--Select--');
+                $('#location').append(opt);
+                $.each(data, function(key, val) {
+                    var opt = $('<option />').val(val.locationid).text(val.locationname);
+                    $('#location').append(opt);
+                });
+            }
+        });
+    });
+});
+</script>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="block-header ">
+            <center><h2>CATERING REGISTRATIONS UPDATE</h2></center>
+        </div>
+        <!-- Input -->
+        <div class="row clearfix">
+            <div class="col-lg-2">
+            </div>
+
+            <div class="col-lg-8 ">
+                <div class="card">
+                    <div class="header">
+
+
+                    </div>
+                    <div class="body">
+                        <h2 class="card-inside-title">Catering Details</h2>
+                        <div class="row clearfix">
+                        <form action="{% url 'cateringedit' cater.caterid %}" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <div class="form-line">Item Name
+                                        <input type="text" class="form-control" name="itemname"  value="{{cater.item}}"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-line">Type of Food<br><br>
+                                        <input name="type" type="radio" value="veg"  {% if cater.type == 'veg' %} checked {% endif %}/> VEG&nbsp;&nbsp;
+                                        <input name="type" type="radio" value="nonveg"  {% if cater.type == 'nonveg' %} checked {% endif %}/> NON VEG&nbsp;&nbsp;
+                                        <input name="type" type="radio" value="desserts" {% if cater.type == 'deserts' %} checked {% endif %}/> DESSERTS&nbsp;&nbsp;
+                                        <input name="type" type="radio" value="cooldrinks" {% if cater.type == 'cool drinks' %} checked {% endif %}  /> COOL DRINKS
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-line">Rate
+                                        <input type="number" class="form-control" name="rate"  min="0" value="{{cater.rate}}" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-line">Description
+                                        <input type="text" class="form-control"name="desc" value="{{cater.desc}}" />
+                                    </div>
+                                </div>
+                                <div class="form-group">Food Image<br><br>
+                                    <div class="form-line">
+                                        <img  src="/images/{{cater.image}}" style="width:100px;height:110px" ><br><br>
+                                        Choose another image<input type="file" class="form-control" name="imagenew" placeholder="image" />
+                                        <input type="hidden" name="imageold" value="{{cater.image}}">
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <label>Choose Category</label>
+                                        <select class="form-control show-tick" name="categoryname">
+                                            {% for c in category %}
+                                             {% if c.categoryid == cater.categoryid.categoryid %}
+                                            <option value="{{c.categoryid}}" selected>{{c.categoryname}}</option>
+                                            {% else %}
+                                            <option value="{{c.categoryid}}" >{{c.categoryname}}</option>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label>Choose State</label>
+
+                                        <select class="form-control show-tick" name="statename" id="statename" >
+                                                {% for s in state %}
+                                            {% if s.stateid == cater.locationid.districtid.stateid %}
+                                            <option value="{{s.stateid}}" selected>{{s.statename}}</option>
+                                            {% else %}
+                                            <option value="{{s.stateid}}" >{{s.statename}}</option>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <label>Choose District</label>
+
+                                        <select class="form-control show-tick" id="district" required>
+                                            {% for d in dist %}
+                                            {% if d.districtid == cater.locationid.districtid %}
+                                            <option value="{{d.districtid}}" selected>{{d.districtname}}</option>
+                                            {% else %}
+                                            <option value="{{d.districtid}}" >{{d.districtname}}</option>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label>Choose Location</label>
+
+                                        <select class="form-control show-tick" name="location" id="location" required>
+
+                                             {% for l in loc %}
+                                            {% if l.locationid == cater.locationid %}
+                                            <option value="{{l.locationid}}" selected>{{l.locationname}}</option>
+                                            {% else %}
+                                            <option value="{{l.locationid}}">{{l.locationname}}</option>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+
+                            </div>
+                              <div class="row" style=" padding-left:257px">
+                            <button class="btn btn-danger" style="width:150px;height:40px;border-radius:30px">Update</button>
+                        </div>
+                            </form>
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-lg-2">
+            </div>
+        </div>
+
+    </div>
+</section>
+{% include 'Service/footer.html'%}
+
+

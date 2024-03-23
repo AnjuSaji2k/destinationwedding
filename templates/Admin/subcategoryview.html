@@ -1,0 +1,168 @@
+{% load static %}
+{% include 'Admin/adminheader.html'%}
+
+<script src="{% static 'Admin/jquery.min.js' %}"></script>
+<script>
+    $(document).ready(function () {
+    //alert("a")
+    $.ajaxSetup({
+        headers: {
+            "X-CSRFToken": '{{ csrf_token }}'
+        }
+    });
+
+    $('#categoryname').change(function () {
+        var did = $(this).val();
+        $.ajax({
+
+            type: "POST",
+            url: '{% url "fillcategory" %}',
+            data: { did: did },
+            dataType: "json",
+            success: function (data) {
+            i=1;
+                $('#subcategory tbody').empty();
+                $.each(data, function(key, val) {
+                    var tr = $('<tr>');
+                    var td1 = $('<td>').text(i++);
+                    var td2 = $('<td>').text(val.subcatname);
+                    var td3 = $('<td>').text(val.desc).css({'display': 'flex', 'text-align': 'center','item-align':'center'});
+                    var td4 = $('<td>').append($('<img>').attr('src', '/images/' + val.subimage).css({'width': '100px', 'height': '100px'}));
+                    var editUrl = '../subcatedit/' + val.subcatid;
+                    var deleteUrl = '../subcatdelete/' + val.subcatid;
+                    var td5 = $('<td>').html('<a href="' + editUrl + '">Edit</a>');
+                    var td6 = $('<td>').html('<a href="' + deleteUrl + '">Delete</a>');
+                    tr.append(td1, td2, td3, td4,td5,td6);
+                    $('#subcategory').append(tr);
+                });
+            }
+        });
+    });
+});
+</script>
+<style>
+    .selectpicker{
+        display: inline-block;
+    overflow: hidden;
+    width: 100%;
+    text-align: left;
+    height:40px;
+    border-radius:20px;
+    border: 2px solid #00c292;
+    color:#00c292;
+
+    }
+
+</style>
+<div class="breadcomb-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="breadcomb-list">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <div class="breadcomb-wp">
+                                <div class="breadcomb-icon">
+                                    <i class="notika-icon notika-edit"></i>
+                                </div>
+                                <div class="breadcomb-ctn">
+                                    <h2>Subcategory View</h2>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-3">
+                            <div class="breadcomb-report">
+                                <button data-toggle="tooltip" data-placement="left" title="Download Report" class="btn">
+                                    <i class="notika-icon notika-sent"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                            <div class="nk-int-mk sl-dp-mn">
+                                <h2>Select Category</h2>
+                            </div>
+                            <div class="bootstrap-select fm-cmp-mg">
+                                <select class="selectpicker" id="categoryname" name="categoryname">
+                                    <option>Choose Category</option>
+                                    {% for c in category %}
+                                    <option value="{{c.categoryid}}">{{ c.categoryname }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="data-table-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="data-table-list">
+                    <div class="basic-tb-hd">
+                        <h2>Subcategory</h2>
+                    </div>
+                    <div class="table-responsive">
+                        <table id="subcategory" class="table table-striped">
+                            <thead>
+
+                            <tr>
+                                <th>Sl.no</th>
+                                <th>Subcategory Name</th>
+                                <th>Description</th>
+                                <th>Image</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for s in subcat %}
+                            <tr>
+                                <th>{{forloop.counter}}</th>
+                                <th>{{s.subcatname}}</th>
+                                <th>{{s.desc}}</th>
+                                <th><img src="/images/{{s.subimage}}"
+                                         style="width:70px;height:70px"></th>
+                                <th>
+                                    <a href="{% url 'subcatedit' id=s.subcatid %}">Edit</a>
+                                </th>
+                                <th>
+                                    <a href="{% url 'subcatdelete' id=s.subcatid %}">Delete</a>
+                                </th>
+
+
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+<div class="col-lg-6 col-md-6 col-sm-6 col-xs-3">
+    <div class="breadcomb-report">
+        <button data-toggle="tooltip" data-placement="left" title="Download Report"
+                class="btn">
+            <i class="notika-icon notika-sent"></i></button>
+    </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+{% include 'Admin/adminfooter.html'%}

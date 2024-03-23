@@ -1,0 +1,72 @@
+{% load static %}
+{% include 'Admin/adminheader.html'%}
+<div class="breadcomb-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="breadcomb-list">
+                    <div class="row">
+                        <div class="col-lg-11 col-md-11 col-sm-11 col-xs-12">
+                            <div class="breadcomb-wp">
+                                <div class="breadcomb-icon">
+                                    <i class="notika-icon notika-edit"></i>
+                                </div>
+                                <div class="breadcomb-ctn">
+                                    <h2>Service Providers Accept Lists</h2>
+                                </div>
+                            </div>
+                        </div>
+<div class="col-lg-1 col-md-1 col-sm-1 col-xs-12" >
+
+    <a href="{% url 'servicerequestview' %}"><button class="btn btn-default btn-icon-notika"><i class="notika-icon notika-left-arrow"></i> Back</button></a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+                <div class="col-lg-11 col-md-11 col-sm-11 col-xs-12" style="    padding-left: 134px;">
+                    <div class="normal-table-list mg-t-30">
+                        <div class="basic-tb-hd">
+                        </div>
+                        <div class="bsc-tbl-bdr">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                <th>Sl.no</th>
+                                <th>Servicer Name</th>
+                                <th>Service Type</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Regdate</th>
+                                <th>State</th>
+                                <th>District</th>
+                                <th>Location</th>
+
+
+                            </tr>
+                                </thead>
+                                <tbody>
+                                    {% for s in ser %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <th>{{s.servicename}}</th>
+                                <th>{{s.categoryid.categoryname}}</th>
+                                <th>{{s.email}}</th>
+                                <th>{{s.phone}}</th>
+                                <th>{{s.regdate | date:"d/m/Y" }}</th>
+                                <th>{{s.locationid.districtid.stateid.statename}}</th>
+                                <th>{{s.locationid.districtid.districtname}}</th>
+                                <th>{{s.locationid.locationname}}</th>
+                            </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+{% include 'Admin/adminfooter.html'%}

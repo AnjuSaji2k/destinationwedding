@@ -1,0 +1,34 @@
+{% load static %}
+{% include "customer/header.html" %}
+<!-- Story Start -->
+<div class="container-fluid py-5" id="story">
+    <div class="container pt-5 pb-3">
+        <div class="section-title position-relative text-center">
+            <h6 class="text-uppercase text-primary mb-3" style="letter-spacing: 3px;">Story</h6>
+            <h1 class="font-secondary display-4">Our Love Story</h1>
+            <i class="far fa-heart text-dark"></i>
+        </div>
+        {% for s in services %}
+        <div class="container timeline position-relative p-0">
+
+            <div class="row">
+
+                <div class="col-md-6 text-center text-md-right">
+                    <a href="{% url 'servicesviewmore' id=s.serviceid %}"><img class="img-fluid mr-md-3"  src="/images/{{s.image}}"  style="width:300px; height:300px;" alt=""></a>
+                </div>
+                <div class="col-md-6 text-center text-md-left">
+                    <div class="h-100 d-flex flex-column justify-content-center bg-secondary p-4 ml-md-3">
+                        <h4 class="mb-2">{{s.providerid.servicename}}</h4>
+                        <p class="text-uppercase mb-2">{{s.servicename}}</p>
+                        <p class="m-0">{{s.desc}}</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<!-- Story End -->
+{% include "customer/footer.html" %}

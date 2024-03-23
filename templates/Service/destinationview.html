@@ -1,0 +1,59 @@
+{% load static %}
+{% include 'Service/header.html'%}
+<br>
+<br>
+<br>
+<br>
+
+<div style="margin-left:300px; margin-right:30px;" >
+<div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            <h2>
+                                DESTINATION VIEWS
+                            </h2>
+
+                        </div>
+                        <div class="body table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Sl.No.</th>
+                                        <th>SERVICE TYPE</th>
+                                        <th>PROVIDERS NAME</th>
+                                        <th>DESTINATION NAME</th>
+                                        <th>RATE</th>
+                                        <th>DESC</th>
+                                        <th>LOCATION</th>
+                                        <th>IMAGE</th>
+                                        <th>EDIT</th>
+                                        <th>DELETE</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for d in destination %}
+                                    <tr>
+                                        <th scope="row">{{forloop.counter}}</th>
+                                        <td>{{d.categoryid.categoryname}}</td>
+                                        <td>{{d.providerid.servicename}}</td>
+                                        <td>{{d.dname}}</td>
+                                        <td>{{d.rate}}</td>
+                                        <td>{{d.desc}}</td>
+                                        <td>{{d.locationid.locationname}}</td>
+                                        <td><img  src="/images/{{d.image}}" style="width:100px;height:110px" ></td>
+                                        <td><button class="btn btn-success">Edit</button></a></td>
+                                        <td><a href="{% url 'destinationdelete' id=d.destid %}"><button class="btn btn-danger">Delete</button></a></td>
+
+
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+{% include 'Service/footer.html'%}

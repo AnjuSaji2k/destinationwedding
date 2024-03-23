@@ -1,0 +1,61 @@
+{% load static %}
+{% include 'Service/header.html'%}
+<br>
+<br>
+<br>
+<br>
+
+<div style="margin-left:300px; margin-right:30px;" >
+<div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            <h2>
+                                CATERING VIEWS
+                            </h2>
+
+                        </div>
+                        <div class="body table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Sl.No.</th>
+                                        <th>SERVICE TYPE</th>
+                                        <th>PROVIDERS NAME</th>
+                                        <th>DISH NAME</th>
+                                        <th>TYPE</th>
+                                        <th>RATE</th>
+                                        <th>DESC</th>
+                                        <th>LOCATION</th>
+                                        <th>IMAGE</th>
+                                        <th>EDIT</th>
+                                        <th>DELETE</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for c in catering %}
+                                    <tr>
+                                        <th scope="row">{{forloop.counter}}</th>
+                                        <td>{{c.categoryid.categoryname}}</td>
+                                        <td>{{c.providerid.servicename}}</td>
+                                        <td>{{c.item}}</td>
+                                        <td>{{c.type}}</td>
+                                        <td>{{c.rate}}</td>
+                                        <td>{{c.desc}}</td>
+                                        <td>{{c.locationid.locationname}}</td>
+                                        <td><img  src="/images/{{c.image}}" style="width:100px;height:110px" ></td>
+                                        <td><a href="{% url 'cateringedit' id=c.caterid %}"><button class="btn btn-success">Edit</button></a></td>
+                                        <td><a href="{% url 'cateringdelete' id=c.caterid %}"><button class="btn btn-danger">Delete</button></a></td>
+
+
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+{% include 'Service/footer.html'%}
