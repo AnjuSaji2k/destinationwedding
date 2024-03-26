@@ -212,17 +212,16 @@
                     <div class="group">
                         <label for="statename" class="label">Statename</label>
                         <select id="statename" name="statename" class="input" required>
-                            <option selected style="color:black;" >Choose State...</option>
+                            <option selected >Choose State...</option>
                             {% for s in s %}
-                            <option value="{{s.stateid}}">{{ s.statename }}</option>
+                            <option style="color:black;" value="{{s.stateid}}">{{ s.statename }}</option>
                             {% endfor %}
                         </select>
 
                     </div>
-
                     <div class="group">
                         <label for="district" class="label">Districtname</label>
-                        <select name="district" id="district" class="input">
+                        <select name="district" id="district" style="color:black;" class="input">
                         </select>
                     </div>
                     <div class="group">
