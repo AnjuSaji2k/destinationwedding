@@ -25,11 +25,11 @@
                        name="categoryname" value="{{category.categoryname}}">
 
                 <br>
-                <input class="form-input" type="file" id="abc" placeholder="Categoryimage"  name="image" value="{{cat.image}}">
+                <input class="form-input" type="file" id="abc" placeholder="Categoryimage"  name="image" value="{{cat.image}}" required>
                 <input class="form-input" type="hidden"  name="imageid" value="{{category.image}}">
 
                 <br>
-                <input class="form-input" type="textarea" id="abc1" placeholder="Description" required name="desc" value="{{category.desc}}">
+                <input class="form-input" type="text" id="abc1" placeholder="Description" required name="desc" value="{{category.desc}}" >
                 <br>
                 <button class="btn submits sign-up" style="margin-top:-10px;margin-left:190px;">Update</button>
             </div>

@@ -1,5 +1,6 @@
 from django.http import JsonResponse, HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.views.decorators.cache import cache_control
 
 from Adminapp.models import *
 from Guestapp.models import Servicereg
@@ -7,8 +8,12 @@ from Serviceapp.models import *
 
 
 # Create your views here.
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def home(request):
-    return render(request, "service/servicehome.html")
+    if "loginid" in request.session:
+        return render(request, "service/servicehome.html")
+    else:
+        return HttpResponse("<script>alert('Login First');window.location='/';</script>")
 
 
 def travelreg(request):
@@ -149,7 +154,6 @@ def cateringedit(request, id):
             c.image = request.FILES['imagenew']
         else:
             c.image = request.POST.get('imageold')
-
         c.locationid = Location.objects.get(locationid=request.POST.get('location'))
         c.save()
         return cateringview(request)
@@ -159,8 +163,7 @@ def cateringedit(request, id):
         district = District.objects.filter(stateid=cater.locationid.districtid.stateid)
         loc = Location.objects.filter(districtid=cater.locationid.districtid)
         category = Category.objects.all()
-        return render(request, "service/cateringedit.html",
-                      {'cater': cater, 'state': state, 'category': category, 'dist': district, 'loc': loc})
+        return render(request, "service/cateringedit.html",{'cater': cater, 'state': state, 'category': category, 'dist': district, 'loc': loc})
 
 
 def destinationreg(request):
@@ -236,37 +239,53 @@ def fillcategory(request):
     return JsonResponse(list(subcat), safe=False)
 
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def serviceregistration(request):
-    if request.method == "POST":
-        pro = request.session['loginid']
-        idr = Servicereg.objects.get(loginid=pro)
-        # return HttpResponse(pro)
-        provider =idr.providerid
-        sname = request.POST.get('servname')
-        desc = request.POST.get('desc')
-        rate = request.POST.get('rate')
-        subcategory = request.POST.get('subcategory')
-        ser_obj = Serviceregistration()
-        if Serviceregistration.objects.filter(servicename=sname, desc=desc).exists():
+    if "loginid" in request.session:
+        if request.method == "POST":
+            pro = request.session['loginid']
+            idr = Servicereg.objects.get(loginid=pro)
+            # return HttpResponse(pro)
+            provider =idr.providerid
+            sname = request.POST.get('servname')
+            desc = request.POST.get('desc')
+            rate = request.POST.get('rate')
+            subcategory = request.POST.get('subcategory')
+            ser_obj = Serviceregistration()
+            if Serviceregistration.objects.filter(servicename=sname, desc=desc).exists():
+                return HttpResponse(
+                    "<script>alert('Duplicated Entry..');window.location='/service/serviceregistration/';</script>")
+            ser_obj.servicename = sname
+            ser_obj.desc = desc
+            ser_obj.image = request.FILES['image']
+            ser_obj.subcatid = Subcategory.objects.get(subcatid=(subcategory))
+            ser_obj.locationid = Location.objects.get(locationid=request.POST.get('location'))
+            ser_obj.providerid = Servicereg.objects.get(providerid=provider)
+            ser_obj.rate = rate
+            ser_obj.save()
             return HttpResponse(
-                "<script>alert('Duplicated Entry..');window.location='/service/serviceregistration/';</script>")
-        ser_obj.servicename = sname
-        ser_obj.desc = desc
-        ser_obj.image = request.FILES['image']
-        ser_obj.subcatid = Subcategory.objects.get(subcatid=(subcategory))
-        ser_obj.locationid = Location.objects.get(locationid=request.POST.get('location'))
-        ser_obj.providerid = Servicereg.objects.get(providerid=provider)
-        ser_obj.rate = rate
-        ser_obj.save()
-        return HttpResponse(
-            "<script>alert('Service Inserted...');window.location='/service/serviceregistration/';</script>")
+                "<script>alert('Service Inserted...');window.location='/service/serviceregistration/';</script>")
 
-    cat = Category.objects.all()
-    state = State.objects.all()
-    return render(request, "service/serviceregistration.html", {'st': state, 'category': cat})
+        cat = Category.objects.all()
+        state = State.objects.all()
+        return render(request, "service/serviceregistration.html", {'st': state, 'category': cat})
+
+    else:
+        return HttpResponse("<script>alert('Login First');window.location='/';</script>")
 
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def serviceregisterview(request):
-    cat = Category.objects.all()
-    ser = Serviceregistration.objects.all()
-    return render(request, "service/serviceregisterview.html", {'services': ser, 'category': cat})
+    if "loginid" in request.session:
+        cat = Category.objects.all()
+        ser = Serviceregistration.objects.all()
+        return render(request, "service/serviceregisterview.html", {'services': ser, 'category': cat})
+    else:
+        return HttpResponse("<script>alert('Login First');window.location='/';</script>")
+
+
+def logout(request):
+    if "loginid" in request.session:
+        del request.session["loginid"]
+        del request.session['uname']
+        return redirect('/')
