@@ -39,6 +39,43 @@
     });
 });
 </script>
+<script>
+    $(document).ready(function () {
+    //alert("a")
+    $.ajaxSetup({
+        headers: {
+            "X-CSRFToken": '{{ csrf_token }}'
+        }
+    });
+
+    $('#subcategory').change(function () {
+        var did = $(this).val();
+        $.ajax({
+
+            type: "POST",
+            url: '{% url "filldistrict" %}',
+            data: { did: did },
+            dataType: "json",
+            success: function (data) {
+            i=1;
+                $('#district tbody').empty();
+                $.each(data, function(key, val) {
+                    var tr = $('<tr>');
+                    var td1 = $('<td>').text(i++);
+                    var td2 = $('<td>').text(val.districtname);
+                    var editUrl = '../districtedit/' + val.districtid;
+                    var deleteUrl = '../districtdelete/' + val.districtid;
+                    var td3 = $('<td>').html('<a href="' + editUrl + '">Edit</a>');
+                    var td4 = $('<td>').html('<a href="' + deleteUrl + '">Delete</a>');
+                    tr.append(td1, td2, td3, td4);
+                    $('#district').append(tr);
+                });
+            }
+        });
+    });
+});
+</script>
+
 <br>
 <br>
 <br>
@@ -73,7 +110,7 @@
                                     </div>
                         <br><br><br><br>
                         <div class="body table-responsive">
-                            <table class="table table-striped">
+                            <table id=service class="table table-striped">
                                 <thead>
                                     <tr>
                                         <th>Sl.No.</th>
@@ -100,8 +137,6 @@
                                         <td><img  src="/images/{{v.image}}" style="width:100px;height:110px" ></td>
                                         <td><button class="btn btn-success">Edit</button></a></td>
                                         <td><button class="btn btn-danger">Delete</button></a></td>
-
-
                                     </tr>
                                 {% endfor %}
                                 </tbody>

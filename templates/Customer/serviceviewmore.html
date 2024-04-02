@@ -25,9 +25,9 @@
                        <i class="fa fa-inr text-primary pr-3"></i>{{services.rate}}/-</h3>
                     <form action="{% url 'booking' services.serviceid %} " method="post">
                         {% csrf_token %}
-                    <input type="date" name="eventdate"><br>
+                    <input type="text" name="eventdate"><br>
                     <div class="position-relative">
-    <button type="submit" class="btn btn-outline-primary btn-block mr-1" >Book Now</button></div>
+    <button type="submit" class="btn btn-outline-primary btn-block mr-1" >Add to Cart</button></div>
                         </form>
 
 
